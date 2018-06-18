@@ -5,6 +5,6 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="newsTitle">#00172d</color>
-    <color name="newsText">#bdbfbf</color>
+    <color name="newsText">#bdbdbd</color>
     <color name="newsDate">#66bbf4</color>
 </resources>
