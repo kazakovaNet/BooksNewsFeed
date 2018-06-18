@@ -32,7 +32,7 @@ public class BooksNewsActivity extends AppCompatActivity implements LoaderCallba
      * URL for books news from The Guardian
      */
     private static final String THEGUARDIAN_REQUEST_URL =
-            "https://content.guardianapis.com/search?q=books&tag=books/books&section=technology&api-key=test&format=json&page-size=20&show-fields=trailText,thumbnail&order-by=newest";
+            "https://content.guardianapis.com/search?q=books&tag=books/books&api-key=test&format=json&page-size=30&show-fields=trailText,thumbnail&order-by=newest";
 
     /**
      * Constant value for the books news loader ID
