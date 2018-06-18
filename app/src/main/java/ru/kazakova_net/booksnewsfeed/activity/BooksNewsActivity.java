@@ -1,14 +1,15 @@
-package ru.kazakova_net.booksnewsfeed;
+package ru.kazakova_net.booksnewsfeed.activity;
 
 import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,15 +17,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class BooksNewsActivity extends AppCompatActivity {
+import ru.kazakova_net.booksnewsfeed.loader.BooksNewsLoader;
+import ru.kazakova_net.booksnewsfeed.model.BooksNews;
+import ru.kazakova_net.booksnewsfeed.adapter.BooksNewsAdapter;
+
+import ru.kazakova_net.booksnewsfeed.R;
+
+public class BooksNewsActivity extends AppCompatActivity implements LoaderCallbacks<List<BooksNews>> {
     public static final String LOG_TAG = BooksNewsActivity.class.getName();
 
     /**
      * URL for books news from The Guardian
      */
     private static final String THEGUARDIAN_REQUEST_URL =
-            "https://content.guardianapis.com/search?q=books&api-key=test&format=json";
+            "https://content.guardianapis.com/search?q=books&tag=books/books&section=technology&api-key=test&format=json&page-size=20&show-fields=trailText,thumbnail&order-by=newest";
 
     /**
      * Constant value for the books news loader ID
@@ -108,27 +116,27 @@ public class BooksNewsActivity extends AppCompatActivity {
     }
 
     @Override
-    public Loader<List<Earthquake>> onCreateLoader(int id, Bundle args) {
+    public Loader<List<BooksNews>> onCreateLoader(int id, Bundle args) {
         Log.d(LOG_TAG, "TEST: onCreateLoader()");
 
         // Create a new loader for the given URL
-        return new EarthquakeLoader(this, THEGUARDIAN_REQUEST_URL);
+        return new BooksNewsLoader(this, THEGUARDIAN_REQUEST_URL);
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> data) {
+    public void onLoadFinished(Loader<List<BooksNews>> loader, List<BooksNews> data) {
         Log.d(LOG_TAG, "TEST: onLoadFinished()");
 
         // Hide loading indicator because the data has been loaded
         mLoadingIndicator.setVisibility(View.GONE);
 
-        // Set empty state text to display "No earthquakes found."
+        // Set empty state text to display "No books news found."
         mEmptyStateTextView.setText(getString(R.string.empty_state));
 
         // Clear the adapter of previous earthquake data
         mAdapter.clear();
 
-        // If there is a valid list_books_news of {@link Earthquake}s, then add them to the adapter's
+        // If there is a valid list of {@link Books}s, then add them to the adapter's
         // data set. This will trigger the ListView to update.
         if (data != null && !data.isEmpty()) {
             mAdapter.addAll(data);
@@ -136,7 +144,7 @@ public class BooksNewsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Earthquake>> loader) {
+    public void onLoaderReset(Loader<List<BooksNews>> loader) {
         Log.d(LOG_TAG, "TEST: onLoaderReset()");
 
         // Loader reset, so we can clear out our existing data.
