@@ -156,7 +156,7 @@ public class BookNewsActivity extends AppCompatActivity implements LoaderCallbac
         // If there is a valid list of {@link Books}s, then add them to the adapter's
         // data set. This will trigger the ListView to update.
         if (data != null && !data.isEmpty()) {
-            bookNewsAdapter.addAll(data);
+//            bookNewsAdapter.addAll(data);
         }
     }
     
