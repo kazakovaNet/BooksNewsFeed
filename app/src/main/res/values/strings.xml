@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">Books News Feed</string>
+    <string name="app_name">Book News</string>
 
     <!-- Text to display in the list when there are no books news [CHAR LIMIT=NONE] -->
-    <string name="empty_state">No books news found.</string>
+    <string name="empty_state">No book news found</string>
 
     <!-- Error message when there is no internet connectivity [CHAR LIMIT=NONE] -->
-    <string name="no_internet_connection">No internet connection.</string>
+    <string name="no_internet_connection">No internet connection</string>
 
     <string name="content_description">News image</string>
 </resources>

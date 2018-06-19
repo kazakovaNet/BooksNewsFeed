@@ -18,6 +18,7 @@ package ru.kazakova_net.booknewsfeed.adapter;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +61,7 @@ public class BookNewsAdapter extends ArrayAdapter<BookNews> {
         TextView webPublicationDateTextView = listItemView.findViewById(R.id.web_publication_date);
         TextView webTitleTextView = listItemView.findViewById(R.id.web_title);
         TextView trailTextTextView = listItemView.findViewById(R.id.trail_text);
+        TextView sectionName = listItemView.findViewById(R.id.section_name);
         
         BookNews currentBookNews = getItem(position);
         
@@ -74,8 +76,9 @@ public class BookNewsAdapter extends ArrayAdapter<BookNews> {
                     .into(thumbnailImageView);
             
             webTitleTextView.setText(currentBookNews.getWebTitle());
-            trailTextTextView.setText(currentBookNews.getTrailText());
+            trailTextTextView.setText(formatTrailText(currentBookNews.getTrailText()));
             webPublicationDateTextView.setText(formatDate(currentBookNews.getWebPublicationDate()));
+            sectionName.setText(currentBookNews.getSectionName());
         }
         
         return listItemView;
@@ -85,6 +88,10 @@ public class BookNewsAdapter extends ArrayAdapter<BookNews> {
      * Return the formatted date string (i.e. "03.05.2018, 22:15") from a string data
      */
     private String formatDate(String stringDateObject) {
+        if (stringDateObject.equals("")){
+            return stringDateObject;
+        }
+        
         SimpleDateFormat dateFormatInput = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
         SimpleDateFormat dateFormatOutput = new SimpleDateFormat("dd.MM.yyyy, HH:mm", Locale.getDefault());
         
@@ -97,5 +104,12 @@ public class BookNewsAdapter extends ArrayAdapter<BookNews> {
         }
         
         return dateFormatOutput.format(date);
+    }
+    
+    /**
+     * Returns a formatted string cleared from html tags
+     */
+    private String formatTrailText(String trailText) {
+        return Html.fromHtml(trailText).toString();
     }
 }

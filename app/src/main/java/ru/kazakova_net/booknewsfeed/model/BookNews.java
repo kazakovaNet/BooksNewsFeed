@@ -24,6 +24,7 @@ public class BookNews {
     private String webUrl;
     private String trailText;
     private String thumbnail;
+    private String sectionName;
     
     /**
      * Constructor of new {@link BookNews} object
@@ -33,13 +34,15 @@ public class BookNews {
      * @param webUrl             URL for the article
      * @param trailText          Short article text
      * @param thumbnail          Thumbnail of the article
+     * @param sectionName        Name of the section that article belongs
      */
-    public BookNews(String webPublicationDate, String webTitle, String webUrl, String trailText, String thumbnail) {
+    public BookNews(String webPublicationDate, String webTitle, String webUrl, String trailText, String thumbnail, String sectionName) {
         this.webPublicationDate = webPublicationDate;
         this.webTitle = webTitle;
         this.webUrl = webUrl;
         this.trailText = trailText;
         this.thumbnail = thumbnail;
+        this.sectionName = sectionName;
     }
     
     public String getUrl() {
@@ -60,5 +63,9 @@ public class BookNews {
     
     public String getThumbnail() {
         return thumbnail;
+    }
+    
+    public String getSectionName() {
+        return sectionName;
     }
 }
