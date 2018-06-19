@@ -191,9 +191,10 @@ public final class QueryUtils {
                 JSONObject fields = currentBookNews.getJSONObject("fields");
                 String trailText = fields.getString("trailText");
                 String thumbnail = fields.getString("thumbnail");
+                String sectionName = currentBookNews.getString("sectionName");
                 
                 // Create a new BookNews object with the data from the JSON response
-                BookNews bookNews = new BookNews(webPublicationDate, webTitle, webUrl, trailText, thumbnail);
+                BookNews bookNews = new BookNews(webPublicationDate, webTitle, webUrl, trailText, thumbnail, sectionName);
                 
                 // Add the new {@link Earthquake} to the list of bookNews.
                 bookNewsList.add(bookNews);

@@ -15,7 +15,7 @@
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/content_description"
         android:scaleType="centerCrop"
-        android:src="@drawable/example"
+        android:src="@drawable/placeholder_image"
         app:riv_corner_radius="5dip" />
 
     <TextView
@@ -24,9 +24,20 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:textColor="@color/newsTitle"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         tools:text="Jaron Lanier: \u2018The solution is to double down on being human\u2019" />
+
+    <TextView
+        android:id="@+id/section_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textStyle="bold"
+        android:textColor="@color/sectionName"
+        android:textSize="14sp"
+        android:textAllCaps="true"
+        tools:text="Books" />
 
     <TextView
         android:id="@+id/trail_text"
@@ -34,16 +45,15 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:textColor="@color/newsText"
-        android:textSize="14sp"
+        android:textSize="16sp"
         tools:text="He\u2019s the Silicon Valley visionary who gave us virtual reality. Now, in a new memoir-cum-manifesto, Jaron Lanier recounts his sad, unusual childhood and calls for a re-evaluation of our ties with the digital environment" />
 
     <TextView
         android:id="@+id/web_publication_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/newsDate"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:gravity="right"
+        android:textColor="@color/colorAccent"
+        android:textSize="16sp"
+        android:gravity="end"
         tools:text="2017-11-12T09:30:50Z" />
 </LinearLayout>
