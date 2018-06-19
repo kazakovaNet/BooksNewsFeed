@@ -1,4 +1,4 @@
-package ru.kazakova_net.booksnewsfeed;
+package ru.kazakova_net.booknewsfeed;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("ru.kazakova_net.booksnewsfeed", appContext.getPackageName());
+        assertEquals("ru.kazakova_net.booknewsfeed", appContext.getPackageName());
     }
 }

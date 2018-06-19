@@ -1,4 +1,4 @@
-package ru.kazakova_net.booksnewsfeed;
+package ru.kazakova_net.booknewsfeed;
 
 import org.junit.Test;
 

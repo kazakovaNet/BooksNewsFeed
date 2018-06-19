@@ -1,9 +1,24 @@
-package ru.kazakova_net.booksnewsfeed.model;
+/*
+ * Copyright (C) 2018 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package ru.kazakova_net.booknewsfeed.model;
 
 /**
  * Created by Kazakova_net on 18.06.2018.
  */
-public class BooksNews {
+public class BookNews {
     private String webPublicationDate;
     private String webTitle;
     private String webUrl;
@@ -11,7 +26,7 @@ public class BooksNews {
     private String thumbnail;
     
     /**
-     * Constructor of new {@link BooksNews} object
+     * Constructor of new {@link BookNews} object
      *
      * @param webPublicationDate The combined date and time of publication
      * @param webTitle           Title of the article
@@ -19,7 +34,7 @@ public class BooksNews {
      * @param trailText          Short article text
      * @param thumbnail          Thumbnail of the article
      */
-    public BooksNews(String webPublicationDate, String webTitle, String webUrl, String trailText, String thumbnail) {
+    public BookNews(String webPublicationDate, String webTitle, String webUrl, String trailText, String thumbnail) {
         this.webPublicationDate = webPublicationDate;
         this.webTitle = webTitle;
         this.webUrl = webUrl;
