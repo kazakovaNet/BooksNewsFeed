@@ -25,8 +25,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -38,7 +36,6 @@ import java.util.List;
 
 import ru.kazakova_net.booknewsfeed.R;
 import ru.kazakova_net.booknewsfeed.adapter.BookNewsAdapter;
-import ru.kazakova_net.booknewsfeed.adapter.RecyclerViewAdapter;
 import ru.kazakova_net.booknewsfeed.loader.BookNewsLoader;
 import ru.kazakova_net.booknewsfeed.model.BookNews;
 
@@ -71,23 +68,40 @@ public class BookNewsActivity extends AppCompatActivity implements LoaderCallbac
      */
     private View loadingIndicatorProgressBar;
 
-    private RecyclerView mRecyclerView;
-    private RecyclerViewAdapter mRecyclerViewAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books_news);
 
-        // Create a new adapter that takes an empty list of book news as input
-        mRecyclerViewAdapter = new RecyclerViewAdapter(BookNewsActivity.this, new ArrayList<BookNews>());
-
-        mRecyclerView = findViewById(R.id.recycle_book_news);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(BookNewsActivity.this));
-        mRecyclerView.setAdapter(mRecyclerViewAdapter);
-
+        ListView bookNewsListView = findViewById(R.id.list_book_news);
         emptyStateTextView = findViewById(R.id.empty_view);
         loadingIndicatorProgressBar = findViewById(R.id.loading_indicator);
+
+        // Set the view to show if the adapter is empty
+        bookNewsListView.setEmptyView(emptyStateTextView);
+
+        // Create a new adapter that takes an empty list of book news as input
+        bookNewsAdapter = new BookNewsAdapter(BookNewsActivity.this, new ArrayList<BookNews>());
+        bookNewsListView.setAdapter(bookNewsAdapter);
+
+        // Set an item click listener on the ListView, which sends an intent to a web browser
+        // to open a website with more information about the selected book news
+        bookNewsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Find the current book news that was clicked on
+                BookNews currentBookNews = bookNewsAdapter.getItem(position);
+
+                // Convert the String URL into a URI object (to pass into the Intent constructor)
+                Uri booksNewsUri = null;
+                if (currentBookNews != null) {
+                    booksNewsUri = Uri.parse(currentBookNews.getUrl());
+                }
+
+                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, booksNewsUri);
+                startActivity(websiteIntent);
+            }
+        });
 
         // Get a reference to the ConnectivityManager to check state of network connectivity
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -133,19 +147,16 @@ public class BookNewsActivity extends AppCompatActivity implements LoaderCallbac
         // Hide loading indicator because the data has been loaded
         loadingIndicatorProgressBar.setVisibility(View.GONE);
 
+        // Set empty state text to display "No book news found."
+        emptyStateTextView.setText(getString(R.string.empty_state));
+
         // Clear the adapter of previous book news data
-        mRecyclerViewAdapter.clear();
+        bookNewsAdapter.clear();
 
         // If there is a valid list of {@link Books}s, then add them to the adapter's
         // data set. This will trigger the ListView to update.
         if (data != null && !data.isEmpty()) {
-            mRecyclerViewAdapter.addAll(data);
-        } else {
-            mRecyclerView.setVisibility(View.GONE);
-
-            // Set empty state text to display "No book news found."
-            emptyStateTextView.setText(getString(R.string.empty_state));
-            emptyStateTextView.setVisibility(View.VISIBLE);
+            bookNewsAdapter.addAll(data);
         }
     }
 
