@@ -27,9 +27,12 @@ import ru.kazakova_net.booknewsfeed.model.BookNews;
 import static ru.kazakova_net.booknewsfeed.activity.BookNewsActivity.LOG_TAG;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolders> {
+    private Context mContext;
     private List<BookNews> mBookNews;
-    
+    private BookNews mCurrentBookNews;
+
     public RecyclerViewAdapter(Context context, List<BookNews> bookNews) {
+        mContext = context;
         mBookNews = bookNews;
     }
     
@@ -43,23 +46,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolders holder, int position) {
-        BookNews currentBookNews = mBookNews.get(position);
+        mCurrentBookNews = mBookNews.get(position);
         
         // Filling the view with data
-        if (currentBookNews != null) {
+        if (mCurrentBookNews != null) {
             Picasso.get()
                     // Start an image request using the specified path
-                    .load(currentBookNews.getThumbnail())
+                    .load(mCurrentBookNews.getThumbnail())
                     // Set download placeholder
                     .placeholder(R.drawable.placeholder_image)
                     // Asynchronously fulfills the request into the specified {@link ImageView}
                     .into(holder.mThumbnailImageView);
             
-            holder.mWebTitleTextView.setText(currentBookNews.getWebTitle());
-            holder.mTrailTextTextView.setText(formatTrailText(currentBookNews.getTrailText()));
-            holder.mWebPublicationDateTextView.setText(formatDate(currentBookNews.getWebPublicationDate()));
-            holder.mSectionNameTextView.setText(currentBookNews.getSectionName());
-            holder.mContributorTextView.setText(currentBookNews.getContributor());
+            holder.mWebTitleTextView.setText(mCurrentBookNews.getWebTitle());
+            holder.mTrailTextTextView.setText(formatTrailText(mCurrentBookNews.getTrailText()));
+            holder.mWebPublicationDateTextView.setText(formatDate(mCurrentBookNews.getWebPublicationDate()));
+            holder.mSectionNameTextView.setText(mCurrentBookNews.getSectionName());
+            holder.mContributorTextView.setText(mCurrentBookNews.getContributor());
         }
     }
     
@@ -79,6 +82,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         
         RecyclerViewHolders(View layoutView) {
             super(layoutView);
+
+            // Set an item click listener on the ListView, which sends an intent to a web browser
+            // to open a website with more information about the selected book news
+            layoutView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Convert the String URL into a URI object (to pass into the Intent constructor)
+                    Uri booksNewsUri = null;
+                    if (mCurrentBookNews != null) {
+                        booksNewsUri = Uri.parse(mCurrentBookNews.getUrl());
+                    }
+
+                    Intent websiteIntent = new Intent(Intent.ACTION_VIEW, booksNewsUri);
+                    mContext.startActivity(websiteIntent);
+                }
+            });
             
             mThumbnailImageView = layoutView.findViewById(R.id.thumbnail);
             mWebPublicationDateTextView = layoutView.findViewById(R.id.web_publication_date);

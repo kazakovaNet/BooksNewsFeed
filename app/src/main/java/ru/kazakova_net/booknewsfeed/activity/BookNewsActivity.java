@@ -44,91 +44,65 @@ import ru.kazakova_net.booknewsfeed.model.BookNews;
 
 public class BookNewsActivity extends AppCompatActivity implements LoaderCallbacks<List<BookNews>> {
     public static final String LOG_TAG = BookNewsActivity.class.getName();
-    
+
     /**
      * URL for book news data from The Guardian
      */
     private static final String THE_GUARDIAN_REQUEST_URL =
             "https://content.guardianapis.com/search?q=books&tag=books/books&api-key=664e9d7f-bb72-4e63-a58f-dd684cab8942&format=json&page-size=50&show-fields=trailText,thumbnail&order-by=newest&show-tags=contributor";
-    
+
     /**
      * Constant value for the book news loader ID
      */
     private static final int BOOKS_NEWS_LOADER_ID = 1;
-    
+
     /**
      * Adapter for the list of book news
      */
     private BookNewsAdapter bookNewsAdapter;
-    
+
     /**
      * TextView that is displayed when the list is empty
      */
     private TextView emptyStateTextView;
-    
+
     /**
      * ProgressBar that is displayed when the list is empty
      */
     private View loadingIndicatorProgressBar;
-    
-    private LinearLayoutManager mLinearLayoutManager;
-    
+
+    private RecyclerView mRecyclerView;
+    private RecyclerViewAdapter mRecyclerViewAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books_news);
-        
-        mLinearLayoutManager = new LinearLayoutManager(BookNewsActivity.this);
-        RecyclerView recyclerView = findViewById(R.id.recycle_book_news);
-        recyclerView.setLayoutManager(mLinearLayoutManager);
-    
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(BookNewsActivity.this, new ArrayList<BookNews>());
-        recyclerView.setAdapter(recyclerViewAdapter);
-        
-        ListView bookNewsListView = findViewById(R.id.list_book_news);
+
+        // Create a new adapter that takes an empty list of book news as input
+        mRecyclerViewAdapter = new RecyclerViewAdapter(BookNewsActivity.this, new ArrayList<BookNews>());
+
+        mRecyclerView = findViewById(R.id.recycle_book_news);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(BookNewsActivity.this));
+        mRecyclerView.setAdapter(mRecyclerViewAdapter);
+
         emptyStateTextView = findViewById(R.id.empty_view);
         loadingIndicatorProgressBar = findViewById(R.id.loading_indicator);
-        
-        // Set the view to show if the adapter is empty
-        bookNewsListView.setEmptyView(emptyStateTextView);
-        
-        // Create a new adapter that takes an empty list of book news as input
-        bookNewsAdapter = new BookNewsAdapter(BookNewsActivity.this, new ArrayList<BookNews>());
-        bookNewsListView.setAdapter(bookNewsAdapter);
-        
-        // Set an item click listener on the ListView, which sends an intent to a web browser
-        // to open a website with more information about the selected book news
-        bookNewsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Find the current book news that was clicked on
-                BookNews currentBookNews = bookNewsAdapter.getItem(position);
-                
-                // Convert the String URL into a URI object (to pass into the Intent constructor)
-                Uri booksNewsUri = null;
-                if (currentBookNews != null) {
-                    booksNewsUri = Uri.parse(currentBookNews.getUrl());
-                }
-                
-                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, booksNewsUri);
-                startActivity(websiteIntent);
-            }
-        });
-        
+
         // Get a reference to the ConnectivityManager to check state of network connectivity
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        
+
         // Get details on the currently active default data network
         NetworkInfo networkInfo = null;
         if (connMgr != null) {
             networkInfo = connMgr.getActiveNetworkInfo();
         }
-        
+
         // If there is a network connection, fetch data
         if (networkInfo != null && networkInfo.isConnected()) {
             // Get a reference to the LoaderManager, in order to interact with loaders.
             LoaderManager loaderManager = getLoaderManager();
-            
+
             // Initialize the loader. Pass in the int ID constant defined above and pass in null for
             // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
             // because this activity implements the LoaderCallbacks interface).
@@ -138,44 +112,47 @@ public class BookNewsActivity extends AppCompatActivity implements LoaderCallbac
             // Otherwise, display error
             // First, hide loading indicator so error message will be visible
             loadingIndicatorProgressBar.setVisibility(View.GONE);
-            
+
             // Update empty state with no connection error message
             emptyStateTextView.setText(getString(R.string.no_internet_connection));
         }
     }
-    
+
     @Override
     public Loader<List<BookNews>> onCreateLoader(int id, Bundle args) {
         Log.d(LOG_TAG, "TEST: onCreateLoader()");
-        
+
         // Create a new loader for the given URL
         return new BookNewsLoader(this, THE_GUARDIAN_REQUEST_URL);
     }
-    
+
     @Override
     public void onLoadFinished(Loader<List<BookNews>> loader, List<BookNews> data) {
         Log.d(LOG_TAG, "TEST: onLoadFinished()");
-        
+
         // Hide loading indicator because the data has been loaded
         loadingIndicatorProgressBar.setVisibility(View.GONE);
-        
-        // Set empty state text to display "No book news found."
-        emptyStateTextView.setText(getString(R.string.empty_state));
-        
+
         // Clear the adapter of previous book news data
-        bookNewsAdapter.clear();
-        
+        mRecyclerViewAdapter.clear();
+
         // If there is a valid list of {@link Books}s, then add them to the adapter's
         // data set. This will trigger the ListView to update.
         if (data != null && !data.isEmpty()) {
-            bookNewsAdapter.addAll(data);
+            mRecyclerViewAdapter.addAll(data);
+        } else {
+            mRecyclerView.setVisibility(View.GONE);
+
+            // Set empty state text to display "No book news found."
+            emptyStateTextView.setText(getString(R.string.empty_state));
+            emptyStateTextView.setVisibility(View.VISIBLE);
         }
     }
-    
+
     @Override
     public void onLoaderReset(Loader<List<BookNews>> loader) {
         Log.d(LOG_TAG, "TEST: onLoaderReset()");
-        
+
         // Loader reset, so we can clear out our existing data.
         bookNewsAdapter.clear();
     }
