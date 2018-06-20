@@ -51,17 +51,16 @@ public class BookNewsAdapter extends ArrayAdapter<BookNews> {
     @NonNull
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View listItemView = convertView;
-        
-        if (listItemView == null) {
-            listItemView = LayoutInflater.from(getContext()).inflate(R.layout.book_news_list_item, parent, false);
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.book_news_list_item, parent, false);
         }
         
-        ImageView thumbnailImageView = listItemView.findViewById(R.id.thumbnail);
-        TextView webPublicationDateTextView = listItemView.findViewById(R.id.web_publication_date);
-        TextView webTitleTextView = listItemView.findViewById(R.id.web_title);
-        TextView trailTextTextView = listItemView.findViewById(R.id.trail_text);
-        TextView sectionName = listItemView.findViewById(R.id.section_name);
+        ImageView thumbnailImageView = convertView.findViewById(R.id.thumbnail);
+        TextView webPublicationDateTextView = convertView.findViewById(R.id.web_publication_date);
+        TextView webTitleTextView = convertView.findViewById(R.id.web_title);
+        TextView trailTextTextView = convertView.findViewById(R.id.trail_text);
+        TextView sectionNameTextView = convertView.findViewById(R.id.section_name);
+        TextView contributorTextView = convertView.findViewById(R.id.contributor);
         
         BookNews currentBookNews = getItem(position);
         
@@ -78,17 +77,18 @@ public class BookNewsAdapter extends ArrayAdapter<BookNews> {
             webTitleTextView.setText(currentBookNews.getWebTitle());
             trailTextTextView.setText(formatTrailText(currentBookNews.getTrailText()));
             webPublicationDateTextView.setText(formatDate(currentBookNews.getWebPublicationDate()));
-            sectionName.setText(currentBookNews.getSectionName());
+            sectionNameTextView.setText(currentBookNews.getSectionName());
+            contributorTextView.setText(currentBookNews.getContributor());
         }
         
-        return listItemView;
+        return convertView;
     }
     
     /**
      * Return the formatted date string (i.e. "03.05.2018, 22:15") from a string data
      */
     private String formatDate(String stringDateObject) {
-        if (stringDateObject.equals("")){
+        if (stringDateObject.equals("")) {
             return stringDateObject;
         }
         

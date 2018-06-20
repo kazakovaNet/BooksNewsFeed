@@ -25,6 +25,8 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -36,6 +38,7 @@ import java.util.List;
 
 import ru.kazakova_net.booknewsfeed.R;
 import ru.kazakova_net.booknewsfeed.adapter.BookNewsAdapter;
+import ru.kazakova_net.booknewsfeed.adapter.RecyclerViewAdapter;
 import ru.kazakova_net.booknewsfeed.loader.BookNewsLoader;
 import ru.kazakova_net.booknewsfeed.model.BookNews;
 
@@ -46,7 +49,7 @@ public class BookNewsActivity extends AppCompatActivity implements LoaderCallbac
      * URL for book news data from The Guardian
      */
     private static final String THE_GUARDIAN_REQUEST_URL =
-            "https://content.guardianapis.com/search?q=books&tag=books/books&api-key=664e9d7f-bb72-4e63-a58f-dd684cab8942&format=json&page-size=50&show-fields=trailText,thumbnail&order-by=newest";
+            "https://content.guardianapis.com/search?q=books&tag=books/books&api-key=664e9d7f-bb72-4e63-a58f-dd684cab8942&format=json&page-size=50&show-fields=trailText,thumbnail&order-by=newest&show-tags=contributor";
     
     /**
      * Constant value for the book news loader ID
@@ -68,10 +71,19 @@ public class BookNewsActivity extends AppCompatActivity implements LoaderCallbac
      */
     private View loadingIndicatorProgressBar;
     
+    private LinearLayoutManager mLinearLayoutManager;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books_news);
+        
+        mLinearLayoutManager = new LinearLayoutManager(BookNewsActivity.this);
+        RecyclerView recyclerView = findViewById(R.id.recycle_book_news);
+        recyclerView.setLayoutManager(mLinearLayoutManager);
+    
+        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(BookNewsActivity.this, new ArrayList<BookNews>());
+        recyclerView.setAdapter(recyclerViewAdapter);
         
         ListView bookNewsListView = findViewById(R.id.list_book_news);
         emptyStateTextView = findViewById(R.id.empty_view);

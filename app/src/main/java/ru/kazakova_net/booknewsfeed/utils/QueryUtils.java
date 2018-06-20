@@ -41,6 +41,8 @@ import ru.kazakova_net.booknewsfeed.model.BookNews;
 public final class QueryUtils {
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
     
+    private static final int SUCCESS_CODE = 200;
+    
     /**
      * Create a private constructor because no one should ever create a {@link QueryUtils} object.
      * This class is only meant to hold static variables and methods
@@ -109,7 +111,7 @@ public final class QueryUtils {
             
             // If the request was successful (response code 200),
             // then read the input stream and parse the response.
-            if (urlConnection.getResponseCode() == 200) {
+            if (urlConnection.getResponseCode() == SUCCESS_CODE) {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             } else {
@@ -192,9 +194,16 @@ public final class QueryUtils {
                 String trailText = fields.getString("trailText");
                 String thumbnail = fields.getString("thumbnail");
                 String sectionName = currentBookNews.getString("sectionName");
+                JSONArray tags = currentBookNews.getJSONArray("tags");
+                String contributor = null;
+                if (tags.length() != 0) {
+                    JSONObject currentTag = tags.getJSONObject(0);
+                    contributor = currentTag.getString("webTitle");
+                }
                 
                 // Create a new BookNews object with the data from the JSON response
-                BookNews bookNews = new BookNews(webPublicationDate, webTitle, webUrl, trailText, thumbnail, sectionName);
+                BookNews bookNews = new BookNews(
+                        webPublicationDate, webTitle, webUrl, trailText, thumbnail, sectionName, contributor);
                 
                 // Add the new {@link Earthquake} to the list of bookNews.
                 bookNewsList.add(bookNews);
