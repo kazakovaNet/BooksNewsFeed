@@ -1,27 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_height="match_parent"
     android:padding="16dp">
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/thumbnail"
+    <FrameLayout
+        android:id="@+id/thumbnail_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="@string/content_description"
-        android:scaleType="centerCrop"
-        android:src="@drawable/placeholder_image"
-        app:riv_corner_radius="5dip" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/content_description"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder_image"
+            app:riv_corner_radius="5dip" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/web_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/thumbnail_wrapper"
         android:layout_marginBottom="8dp"
         android:textColor="@color/newsTitle"
         android:textSize="18sp"
@@ -32,6 +40,7 @@
         android:id="@+id/section_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/web_title"
         android:layout_marginBottom="8dp"
         android:textAllCaps="true"
         android:textColor="@color/sectionName"
@@ -43,6 +52,7 @@
         android:id="@+id/trail_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/section_name"
         android:layout_marginBottom="8dp"
         android:textColor="@color/newsText"
         android:textSize="16sp"
@@ -51,6 +61,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/trail_text"
         android:orientation="horizontal">
 
         <TextView
@@ -74,4 +85,4 @@
             tools:text="2017-11-12T09:30:50Z" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
