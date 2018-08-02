@@ -91,4 +91,5 @@
     <!-- Label for order-by oldest option [CHAR LIMIT=20] -->
     <string name="settings_order_by_oldest_label">Oldest</string>
     <string name="settings_order_by_oldest_value" translatable="false">oldest</string>
+    <string name="value_range">The value must be between %s and %s</string>
 </resources>

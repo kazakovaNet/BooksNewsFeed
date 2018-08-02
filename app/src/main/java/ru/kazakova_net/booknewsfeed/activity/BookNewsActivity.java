@@ -38,7 +38,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import ru.kazakova_net.booknewsfeed.R;
-import ru.kazakova_net.booknewsfeed.SettingsActivity;
 import ru.kazakova_net.booknewsfeed.adapter.BookNewsAdapter;
 import ru.kazakova_net.booknewsfeed.loader.BookNewsLoader;
 import ru.kazakova_net.booknewsfeed.model.BookNews;

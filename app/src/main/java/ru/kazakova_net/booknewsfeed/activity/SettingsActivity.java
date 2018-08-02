@@ -1,4 +1,4 @@
-package ru.kazakova_net.booknewsfeed;
+package ru.kazakova_net.booknewsfeed.activity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,6 +13,8 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import ru.kazakova_net.booknewsfeed.R;
 
 
 public class SettingsActivity extends AppCompatActivity {
@@ -97,7 +99,7 @@ public class SettingsActivity extends AppCompatActivity {
                 if (isInRange(mMin, mMax, input)) {
                     return null;
                 } else {
-                    Toast.makeText(mContext, "The value must be between " + mMin + " and " + mMax,
+                    Toast.makeText(mContext, String.format(mContext.getString(R.string.value_range), mMin, mMax),
                             Toast.LENGTH_SHORT).show();
                 }
             } catch (NumberFormatException nfe) {
