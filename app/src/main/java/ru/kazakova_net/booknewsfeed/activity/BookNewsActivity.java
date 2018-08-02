@@ -82,6 +82,7 @@ public class BookNewsActivity extends AppCompatActivity implements LoaderCallbac
         
         // Set empty state text to display "No book news found."
         emptyStateTextView.setText(getString(R.string.empty_state));
+        emptyStateTextView.setVisibility(View.GONE);
         
         loadingIndicatorProgressBar = findViewById(R.id.loading_indicator);
         
@@ -160,16 +161,16 @@ public class BookNewsActivity extends AppCompatActivity implements LoaderCallbac
         // Hide loading indicator because the data has been loaded
         loadingIndicatorProgressBar.setVisibility(View.GONE);
         
-        // Hide empty state message because the data has been loaded
-        emptyStateTextView.setVisibility(View.GONE);
-        
         // Clear the adapter of previous book news data
         bookNewsAdapter.clearItems();
         
         // If there is a valid list of {@link Books}s, then add them to the adapter's
         // data set. This will trigger the ListView to update.
-        if (data != null && !data.isEmpty()) {
+        if (!data.isEmpty()) {
             bookNewsAdapter.setItems(data);
+        } else {
+            // Show empty state message if no data
+            emptyStateTextView.setVisibility(View.VISIBLE);
         }
     }
     
