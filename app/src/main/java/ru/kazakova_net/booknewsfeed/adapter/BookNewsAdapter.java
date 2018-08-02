@@ -154,13 +154,18 @@ public class BookNewsAdapter extends RecyclerView.Adapter<BookNewsAdapter.BookNe
         private void bind(BookNews bookNews) {
             // Filling the view with data
             if (bookNews != null) {
-                Picasso.get()
-                        // Start an image request using the specified path
-                        .load(bookNews.getThumbnail())
-                        // Set download placeholder
-                        .placeholder(R.drawable.placeholder_image)
-                        // Asynchronously fulfills the request into the specified {@link ImageView}
-                        .into(thumbnailImageView);
+                if (bookNews.getThumbnail().equals("")) {
+                    thumbnailImageView.setImageDrawable(
+                            mContext.getResources().getDrawable(R.drawable.placeholder_image));
+                } else {
+                    Picasso.get()
+                            // Start an image request using the specified path
+                            .load(bookNews.getThumbnail())
+                            // Set download placeholder
+                            .placeholder(R.drawable.placeholder_image)
+                            // Asynchronously fulfills the request into the specified {@link ImageView}
+                            .into(thumbnailImageView);
+                }
                 
                 webTitleTextView.setText(bookNews.getWebTitle());
                 trailTextTextView.setText(formatTrailText(bookNews.getTrailText()));

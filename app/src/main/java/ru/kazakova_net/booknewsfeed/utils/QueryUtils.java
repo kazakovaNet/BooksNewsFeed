@@ -192,7 +192,12 @@ public final class QueryUtils {
                 String webUrl = currentBookNews.getString("webUrl");
                 JSONObject fields = currentBookNews.getJSONObject("fields");
                 String trailText = fields.getString("trailText");
-                String thumbnail = fields.getString("thumbnail");
+                String thumbnail;
+                if (fields.has("thumbnail")) {
+                    thumbnail = fields.getString("thumbnail");
+                } else {
+                    thumbnail = "";
+                }
                 String sectionName = currentBookNews.getString("sectionName");
                 JSONArray tags = currentBookNews.getJSONArray("tags");
                 String contributor = null;

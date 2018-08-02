@@ -18,20 +18,27 @@ package ru.kazakova_net.booknewsfeed.activity;
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import java.util.List;
 
 import ru.kazakova_net.booknewsfeed.R;
+import ru.kazakova_net.booknewsfeed.SettingsActivity;
 import ru.kazakova_net.booknewsfeed.adapter.BookNewsAdapter;
 import ru.kazakova_net.booknewsfeed.loader.BookNewsLoader;
 import ru.kazakova_net.booknewsfeed.model.BookNews;
@@ -44,7 +51,7 @@ public class BookNewsActivity extends AppCompatActivity implements LoaderCallbac
      * URL for book news data from The Guardian
      */
     private static final String THE_GUARDIAN_REQUEST_URL =
-            "https://content.guardianapis.com/search?q=books&tag=books/books&api-key=664e9d7f-bb72-4e63-a58f-dd684cab8942&format=json&page-size=50&show-fields=trailText,thumbnail&order-by=newest&show-tags=contributor";
+            "https://content.guardianapis.com/search";
     
     /**
      * Constant value for the book news loader ID
@@ -111,10 +118,39 @@ public class BookNewsActivity extends AppCompatActivity implements LoaderCallbac
     
     @Override
     public Loader<List<BookNews>> onCreateLoader(int id, Bundle args) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        
+        // getString retrieves a String value from the preferences. The second parameter is the default value for this preference.
+        String pageSize = sharedPrefs.getString(
+                getString(R.string.settings_page_size_key),
+                getString(R.string.settings_page_size_default));
+        
+        String orderBy = sharedPrefs.getString(
+                getString(R.string.settings_order_by_key),
+                getString(R.string.settings_order_by_default)
+        );
+        
+        // parse breaks apart the URI string that's passed into its parameter
+        Uri baseUri = Uri.parse(THE_GUARDIAN_REQUEST_URL);
+        
+        // buildUpon prepares the baseUri that we just parsed so we can add query parameters to it
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+        
+        // Append query parameter and its value. For example, the `format=geojson`
+        uriBuilder.appendQueryParameter("q", "books");
+        uriBuilder.appendQueryParameter("tag", "books/books");
+        uriBuilder.appendQueryParameter("api-key", "664e9d7f-bb72-4e63-a58f-dd684cab8942");
+        uriBuilder.appendQueryParameter("format", "json");
+        uriBuilder.appendQueryParameter("page-size", pageSize);
+        uriBuilder.appendQueryParameter("show-fields", "trailText,thumbnail");
+        uriBuilder.appendQueryParameter("order-by", orderBy);
+        uriBuilder.appendQueryParameter("show-tags", "contributor");
+        
         Log.d(LOG_TAG, "TEST: onCreateLoader()");
         
-        // Create a new loader for the given URL
-        return new BookNewsLoader(this, THE_GUARDIAN_REQUEST_URL);
+        // Create a new loader for the completed uri
+        // https://content.guardianapis.com/search?q=books&tag=books/books&api-key=664e9d7f-bb72-4e63-a58f-dd684cab8942&format=json&page-size=50&show-fields=trailText,thumbnail&order-by=newest&show-tags=contributor
+        return new BookNewsLoader(this, uriBuilder.toString());
     }
     
     @Override
@@ -123,7 +159,7 @@ public class BookNewsActivity extends AppCompatActivity implements LoaderCallbac
         
         // Hide loading indicator because the data has been loaded
         loadingIndicatorProgressBar.setVisibility(View.GONE);
-    
+        
         // Hide empty state message because the data has been loaded
         emptyStateTextView.setVisibility(View.GONE);
         
@@ -151,12 +187,32 @@ public class BookNewsActivity extends AppCompatActivity implements LoaderCallbac
     private void initRecyclerView() {
         RecyclerView bookNewsRecyclerView = findViewById(R.id.list_book_news);
         bookNewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-    
+        
         // Adding a separator between elements
         bookNewsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
-    
+        
         // Create a new adapter that takes an empty list of book news as input
         bookNewsAdapter = new BookNewsAdapter(this);
         bookNewsRecyclerView.setAdapter(bookNewsAdapter);
+    }
+    
+    @Override
+    // This method initialize the contents of the Activity's options menu.
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the Options Menu we specified in XML
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    
+    @Override
+    // This method is called whenever an item in the options menu is selected.
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_settings) {
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
+            
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
