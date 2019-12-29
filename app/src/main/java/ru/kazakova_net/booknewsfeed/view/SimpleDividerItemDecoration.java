@@ -3,8 +3,9 @@ package ru.kazakova_net.booknewsfeed.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import ru.kazakova_net.booknewsfeed.R;
 
